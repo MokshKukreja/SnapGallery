@@ -1,0 +1,129 @@
+<!-- <%- include('partials/header') %> -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SnapGallery</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Poppins, sans-serif;
+    }
+
+    body {
+      background-color: #eaeaea;
+      padding-top: 15px;
+    }
+
+    .flex {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      height: 83vh;
+      width: 40%;
+      margin-top: 3%;
+      padding: 60px;
+      display: flex;
+      flex-direction: column;
+      background-color: rgb(255, 255, 255);
+      color: rgb(0, 0, 0);
+    }
+
+    .container h1:after {
+      content: '';
+      width: 70px;
+      height: 4px;
+      border-radius: 3px;
+      background: #000000;
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      top: 22%;
+      transform: translateX(-50%);
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      outline: none;
+      padding: 13px 15px;
+      border: none;
+      background-color: #dcdcdc;
+      /* background-color: #ccc; */
+      margin: 10px 0;
+    }
+
+    .form-group {
+      margin: 10px 0;
+    }
+
+    .container h1 {
+      margin-bottom: 30px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      background-color: rgb(0, 0, 0);
+      color: rgb(255, 255, 255);
+    }
+
+    .back,.back:visited {
+      padding: 20px;
+      color: #000000;
+    }
+  </style>
+</head>
+
+<body>
+  <a href="/" class="back">Back to Home</a>
+  <div class="flex">
+    <div class="container mt-5">
+      <h1>Contact Us</h1>
+
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="card">
+            <div class="card-body">
+
+              <form action="/contact" method="POST">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" class="form-control" name="contactname" autocomplete="off">
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" class="form-control" name="contactemail" autocomplete="off">
+                </div>
+                <div class="form-group">
+                  <label for="number">Phone Number</label>
+                  <input type="text" class="form-control" name="contactnumber" autocomplete="off">
+                </div>
+                <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea type="text" name="message" id="message" class="form-control" cols="30" rows="5"></textarea>
+                </div>
+              </form>
+              <button type="submit" class="btn btn-dark">SEND</button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>

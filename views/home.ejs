@@ -1,0 +1,110 @@
+<%- include('partials/header') %>
+
+
+<nav>
+  <div class="logo">
+    <h5>SnapGallery</h5>
+  </div>
+  <div class="list">
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#footer">About</a></li>
+      <li><a href="/contact">Contact Us</a></li>
+    </ul>
+  </div>
+  <button id="logBtn" onclick="LogInClick()" ><a href="#register">Login</a></button>
+  <button id="signBtn" onclick="SignInClick()" ><a href="#register">Sign Up</a></button>
+</nav>
+
+<section class="home">
+  <h1>SnapGallery</h1>
+   <div class="para">
+    <p>Experience Your Memories Like Never Before.Say goodbye to disorganized photos and hello to a stunning gallery of memories.Sharing your photos has never been easier. With one click, Organize and showcase your photos beautifully with SnapGallery.
+      </p>
+   </div>
+  <button>Read More</button>
+</section>
+
+
+<section id="register">
+    <div class="form-box signin">
+        <h1 id="title">
+        Sign Up
+    </h1>
+    <form action="/register" method="POST">
+        <div class="input-group">
+          <div class="input-field" id="nameField">
+            <i class="fa-solid fa-user"></i>
+            <input placeholder="Name" type="name" name="name" autocomplete="off">
+          </div>  
+          <div class="input-field">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email"  name="username" autocomplete="off" placeholder="Email">
+          </div>  
+          <div class="input-field">
+            <i class="fa-solid fa-lock "></i>
+            <input type="password" name="password" placeholder="Password">
+          </div>  
+          <p> <a href="#a">Already have an account?</a></p>
+
+        </div>
+        <div class="btn-field">
+            <button  type="submit" id="signupBtn">Sign Up</button>
+        </div>
+    </form>
+</div>
+    <div class="form-box login" id="loginForm">
+        <h1 id="title">
+        Log In
+    </h1>
+    <form action="/login" method="POST">
+        <div class="input-group">
+          <div class="input-field">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" name="username" autocomplete="off" placeholder="Email">
+          </div>  
+          <div class="input-field">
+            <i class="fa-solid fa-lock "></i>
+            <input type="password" name="password" placeholder="Password">
+          </div>  
+          <p> <a href="#a">Forgot password?</a></p>
+
+        </div>
+        <div class="btn-field">
+            <button type="submit" id="LoginBtn">Log In</button>
+        </div>
+    </form>
+
+    
+</div>
+</section>
+
+<footer id="footer">Copyright &copy; 2023 SnapGallery.com | All Rights Reserved </footer>
+
+<script>
+
+let logBtn = document.getElementById("logBtn")
+let signinBtn = document.getElementById("signBtn")
+let loginForm = document.querySelector(".login")
+let signForm = document.querySelector(".signin")
+function LogInClick(){
+    if(logBtn.innerHTML = "Login"){
+    loginForm.style.display = "block"
+    signForm.style.display = "none"
+    signinBtn.style.display = "block"
+    logBtn.style.display = "none"
+    }
+  }
+  
+function SignInClick(){
+   signinBtn.style.display="none"
+   logBtn.style.display="block"
+   logBtn.style.color="white"
+   loginForm.style.display = "none"
+    signForm.style.display = "Block"
+  }
+
+
+</script>
+
+<%- include('partials/footer') %>
