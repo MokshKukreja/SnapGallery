@@ -28,7 +28,7 @@ app.set('view engine','ejs');
 
 
 mongoose.set("strictQuery", false);
-mongoose.connect("mongodb://localhost:27017/memory123")
+mongoose.connect("mongodb+srv://mokshkukreja999:moksh.1234@cluster0.frzozja.mongodb.net/?retryWrites=true&w=majority")
 
 
 
