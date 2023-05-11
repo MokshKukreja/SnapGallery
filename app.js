@@ -176,7 +176,7 @@ app.post("/contact",(req,res)=>{
     service:"gmail",
     auth: {
       user: "mokshkukreja999@gmail.com", // generated ethereal user
-      pass: "", // generated ethereal password
+      pass: "xdnfgujkgfiabcjv", // generated ethereal password
     },
   });
   const mailOptions={
