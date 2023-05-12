@@ -10,7 +10,7 @@ const { dirname } = require('path');
 const { unlink } = require('fs/promises');
 const bcrypt = require("bcrypt");
 const { log } = require('console');
-const saltRounds =10
+const saltRounds = 10
 const alert = require("alert")
 const nodemailer = require("nodemailer");
 require('dotenv').config();
@@ -18,18 +18,18 @@ require('dotenv').config();
 
 
 const app = express();
-app.use(express.urlencoded({extended:true}))
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json());
 app.use(express.static("public"))
 app.use(express.static(__dirname + '/public'));
-app.set('view engine','ejs');
+app.set('view engine', 'ejs');
 
 
 
 mongoose.set("strictQuery", false);
 // mongoose.connect("mongodb://localhost:27017/memory123")
-mongoose.connect(process.env.MONGO_URL,{
+mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -39,11 +39,11 @@ mongoose.connect(process.env.MONGO_URL,{
 
 const userSchema = new mongoose.Schema({
   email: String,
-  password:String
+  password: String
 })
 
 
-const User = new mongoose.model("User",userSchema)
+const User = new mongoose.model("User", userSchema)
 
 
 
@@ -54,84 +54,81 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null,uniqueSuffix+path.extname(file.originalname))
+    cb(null, uniqueSuffix + path.extname(file.originalname))
   }
 })
 
-const upload = multer({ 
-  storage: storage ,
-  limits:{fileSize:100000000},
-  fileFilter: function(req,file,cb){
-    checkFileType(file,cb)
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 100000000 },
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb)
   }
 }).any()
 
-function checkFileType (file, cb) {
+function checkFileType(file, cb) {
 
   const fileTypes = /jpeg|png|jpg/
-  const extname =fileTypes.test(path.extname(file.originalname).toLowerCase())
+  const extname = fileTypes.test(path.extname(file.originalname).toLowerCase())
   const mimetype = fileTypes.test(file.mimetype)
 
-  if(mimetype && extname){
-    return cb(null,true)
-  }else{
+  if (mimetype && extname) {
+    return cb(null, true)
+  } else {
     cb("Please upload images only")
   }
 
 }
 
 
-app.get("/",(req,res)=>{
-    res.render("home")
+app.get("/", (req, res) => {
+  res.render("home")
 })
 
-app.get("/login",(req,res)=>{
+app.get("/login", (req, res) => {
   res.render("login")
 })
-app.get("/register",(req,res)=>{
+app.get("/register", (req, res) => {
   res.render("register")
 })
-app.get("/contact",(req,res)=>{
+app.get("/contact", (req, res) => {
   res.render("contact")
 })
-app.get("/index",(req,res)=>{
-  if(req.isAuthenticated()){
+app.get("/index", (req, res) => {
+  if (req.isAuthenticated()) {
     res.redirect("/main")
-  }else{
+  } else {
     res.redirect("/login")
   }
 })
 
 
-app.post('/upload',(req,res)=>{
-  upload(req,res,(err)=>{
-    if(!err && req.files!=""){
+app.post('/upload', (req, res) => {
+  upload(req, res, (err) => {
+    if (!err && req.files != "") {
       res.status(200).send()
-    }else if(!err && req.files==""){
-      res.statusMessage="Please select an image to upload"
+    } else if (!err && req.files == "") {
+      res.statusMessage = "Please select an image to upload"
       res.status(400).end()
-    }else{
+    } else {
       res.statusMessage = (err === "Please upload images only") ? err : "Photo exceed limit of 1 MB"
       res.status(400).end()
     }
   })
 })
 
-app.post("/register",(req,res)=>{
-  bcrypt.hash(req.body.password,10,function(err,hash){
-    const newUser = new User({
-      email:req.body.username,
-      password: hash
-     })
-     newUser.save(function(err){
-      if(err){
-        console.log(err);
-      }else{
-        res.redirect("/")
-      }
-     })
+app.post("/register", (req, res) => {
+  const newUser = new User({
+    email: req.body.username,
+    password: req.body.password
   })
-   
+  newUser.save(function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect("/")
+    }
+  })
 })
 
 app.post("/login",(req,res)=>{
@@ -145,10 +142,10 @@ app.post("/login",(req,res)=>{
       alert("Email not registered")
     }else{
       if(founduser){
-        bcrypt.compare(password,founduser.password,function(err,result){
-          if(result===false){
+       
+          if(password!=founduser.password){
               alert("Invalid password!")
-              }else if(result===true){
+              }else if(password===founduser.password){
                 let images=[]
                 fs.readdir("./public/uploads/",(err,files)=>{
                   if(!err){
@@ -161,50 +158,51 @@ app.post("/login",(req,res)=>{
               }
             })
           }
-        })
+        
       }
     }
   })
 
 })
 
-app.post("/contact",(req,res)=>{
+
+app.post("/contact", (req, res) => {
 
 
- const  contactusername = req.body.contactname
- const contactemail = req.body.contactemail
- const contactnumber = req.body.contactnumber
- const contactmessage = req.body.message
+  const contactusername = req.body.contactname
+  const contactemail = req.body.contactemail
+  const contactnumber = req.body.contactnumber
+  const contactmessage = req.body.message
 
   const transporter = nodemailer.createTransport({
-    service:"gmail",
+    service: "gmail",
     auth: {
       user: "mokshkukreja999@gmail.com", // generated ethereal user
       pass: process.env.EMAIL, // generated ethereal password
     },
   });
-  const mailOptions={
+  const mailOptions = {
     from: contactusername,
-    to : "mokshkukreja999@gmail.com",
-    subject:`Message from ${contactusername}`,
-    text:  `Name: ${contactusername}
+    to: "mokshkukreja999@gmail.com",
+    subject: `Message from ${contactusername}`,
+    text: `Name: ${contactusername}
     Email: ${contactemail}
     Number: ${contactnumber}
     Message: ${contactmessage}
     `
   }
-  transporter.sendMail(mailOptions,function(err,info){
-    if(err){
-        console.log(err);
-    }else{
-         alert("Mail Sent")
-        console.log("email sent:"+info.response);
-        res.render("contact")
+  transporter.sendMail(mailOptions, function (err, info) {
+    if (err) {
+      console.log(err);
+    } else {
+      alert("Mail Sent")
+      console.log("email sent:" + info.response);
+      res.render("contact")
     }
   })
 
 })
-  
+
 app.put("/delete", (req, res) => {
   const deleteImages = req.body.deleteImages;
   function unlinkFile(filePath) {
@@ -218,7 +216,7 @@ app.put("/delete", (req, res) => {
   if (deleteImages === undefined || !Array.isArray(deleteImages) || deleteImages.length == 0) {
     res.statusMessage = "Please select an image to delete";
     res.status(400).end();
-  }else {
+  } else {
     deleteImages.forEach(image => {
       unlinkFile("./public/uploads/" + image);
     });
