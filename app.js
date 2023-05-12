@@ -28,7 +28,11 @@ app.set('view engine','ejs');
 
 
 mongoose.set("strictQuery", false);
-mongoose.connect("mongodb://localhost:27017/memory123")
+// mongoose.connect("mongodb://localhost:27017/memory123")
+mongoose.connect(process.env.MONGO_URL,{
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
 
 
 
