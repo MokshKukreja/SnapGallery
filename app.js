@@ -117,18 +117,21 @@ app.post('/upload', (req, res) => {
   })
 })
 
-app.post("/register", (req, res) => {
-  const newUser = new User({
-    email: req.body.username,
-    password: req.body.password
+app.post("/register",(req,res)=>{
+  bcrypt.hash(req.body.password,10,function(err,hash){
+    const newUser = new User({
+      email:req.body.username,
+      password: hash
+     })
+     newUser.save(function(err){
+      if(err){
+        console.log(err);
+      }else{
+        res.redirect("/")
+      }
+     })
   })
-  newUser.save(function (err) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.redirect("/")
-    }
-  })
+   
 })
 
 app.post("/login",(req,res)=>{
@@ -142,10 +145,10 @@ app.post("/login",(req,res)=>{
       alert("Email not registered")
     }else{
       if(founduser){
-       
-          if(password!=founduser.password){
+        bcrypt.compare(password,founduser.password,function(err,result){
+          if(result===false){
               alert("Invalid password!")
-              }else if(password===founduser.password){
+              }else if(result===true){
                 let images=[]
                 fs.readdir("./public/uploads/",(err,files)=>{
                   if(!err){
@@ -158,7 +161,7 @@ app.post("/login",(req,res)=>{
               }
             })
           }
-        
+        })
       }
     }
   })
