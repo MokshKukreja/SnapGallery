@@ -15,8 +15,6 @@ const alert = require("alert")
 const nodemailer = require("nodemailer");
 require('dotenv').config();
 
-
-
 const app = express();
 app.use(express.urlencoded({ extended: true }))
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -25,28 +23,19 @@ app.use(express.static("public"))
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
-
-
 mongoose.set("strictQuery", false);
-// mongoose.connect("mongodb://localhost:27017/memory123")
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
 
-
-
-
 const userSchema = new mongoose.Schema({
+  name: String,
   email: String,
   password: String
 })
 
-
 const User = new mongoose.model("User", userSchema)
-
-
-
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -79,7 +68,6 @@ function checkFileType(file, cb) {
   }
 
 }
-
 
 app.get("/", (req, res) => {
   res.render("home")
@@ -117,47 +105,48 @@ app.post('/upload', (req, res) => {
   })
 })
 
-app.post("/register",(req,res)=>{
-  bcrypt.hash(req.body.password,10,function(err,hash){
+app.post("/register", (req, res) => {
+  bcrypt.hash(req.body.password, 10, function (err, hash) {
     const newUser = new User({
-      email:req.body.username,
+      name: req.body.name,
+      email: req.body.username,
       password: hash
-     })
-     newUser.save(function(err){
-      if(err){
+    })
+    newUser.save(function (err) {
+      if (err) {
         console.log(err);
-      }else{
+      } else {
         res.redirect("/")
       }
-     })
+    })
   })
-   
+
 })
 
-app.post("/login",(req,res)=>{
-   const username = req.body.username
+app.post("/login", (req, res) => {
+  const username = req.body.username
   const password = req.body.password
 
-  User.findOne({email:username},function(err,founduser){
-    if(err){
+  User.findOne({ email: username }, function (err, founduser) {
+    if (err) {
       console.log(err)
-    }else if(!founduser){
+    } else if (!founduser) {
       alert("Email not registered")
-    }else{
-      if(founduser){
-        bcrypt.compare(password,founduser.password,function(err,result){
-          if(result===false){
-              alert("Invalid password!")
-              }else if(result===true){
-                let images=[]
-                fs.readdir("./public/uploads/",(err,files)=>{
-                  if(!err){
-                    files.forEach(file=>{
-                      images.push(file)
-                    })
-                    res.render("index",{images:images})
-              }else{
-                 console.log(err)
+    } else {
+      if (founduser) {
+        bcrypt.compare(password, founduser.password, function (err, result) {
+          if (result === false) {
+            alert("Invalid password!")
+          } else if (result === true) {
+            let images = []
+            fs.readdir("./public/uploads/", (err, files) => {
+              if (!err) {
+                files.forEach(file => {
+                  images.push(file)
+                })
+                res.render("index", { images: images })
+              } else {
+                console.log(err)
               }
             })
           }
@@ -170,8 +159,6 @@ app.post("/login",(req,res)=>{
 
 
 app.post("/contact", (req, res) => {
-
-
   const contactusername = req.body.contactname
   const contactemail = req.body.contactemail
   const contactnumber = req.body.contactnumber
